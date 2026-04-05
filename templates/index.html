@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌿 Smart Plant Disease Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🌾 Smart Plant Disease Detection</h1>
+    <p>Upload a leaf image to check for infections or nutrient issues.</p>
+
+    <form action="/predict" method="post" enctype="multipart/form-data">
+      <label class="file-upload">
+        <input type="file" name="file" accept="image/*" required />
+        <span>📷 Choose a Leaf Image</span>
+      </label>
+      <button type="submit">🔍 Detect Disease</button>
+    </form>
+
+    {% if prediction %}
+    <div class="result-card">
+      <h2>🌱 Diagnosis Result</h2>
+      <p class="result-text 
+        {% if 'Healthy' in prediction %}healthy
+        {% elif 'Nutrient' in disease_type %}warning
+        {% else %}infected{% endif %}
+      ">
+        {{ prediction }}
+      </p>
+      <p class="disease-type">{{ disease_type }}</p>
+
+      <div class="image-section">
+        <div class="image-box">
+          <h3>🖼️ Uploaded Leaf</h3>
+          <img src="{{ original_image }}" alt="Original Leaf">
+        </div>
+
+        <div class="image-box">
+          <h3>🔍 Detected Disease Areas</h3>
+          <img src="{{ processed_image }}" alt="Processed Leaf">
+        </div>
+      </div>
+
+      <div class="treatment-box">
+        <h3>💡 Treatment Recommendation</h3>
+        <p>{{ treatment }}</p>
+      </div>
+
+      <a href="{{ url_for('download_report', filename=file_name) }}" class="pdf-btn">
+        📄 Download Report
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
